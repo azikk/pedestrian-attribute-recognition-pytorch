@@ -8,7 +8,7 @@ import torch
 import torchvision.transforms as transforms
 from torch.autograd import Variable
 from torch.nn.parallel import DataParallel
-import cPickle as pickle
+import pickle as pickle
 import time
 import argparse
 from PIL import Image, ImageFont, ImageDraw
@@ -25,7 +25,7 @@ class Config(object):
     def __init__(self):
         
         parser = argparse.ArgumentParser()
-        parser.add_argument('-d', '--sys_device_ids', type=eval, default=(0,))
+        parser.add_argument('-d', '--sys_device_ids', type=eval, default=(0,1))
         parser.add_argument('--set_seed', type=str2bool, default=False)
         # model
         parser.add_argument('--resize', type=eval, default=(224, 224))
@@ -37,7 +37,7 @@ class Config(object):
                 choices=['peta','rap', 'pa100k'])
         # utils
         parser.add_argument('--load_model_weight', type=str2bool, default=True)
-        parser.add_argument('--model_weight_file', type=str, default='./exp/deepmar_resnet50/peta/partition0/run1/model/ckpt_epoch150.pth')
+        parser.add_argument('--model_weight_file', type=str, default='./model/ckpt_epoch150.pth')
         args = parser.parse_args()
         
         # gpu ids
@@ -58,7 +58,7 @@ class Config(object):
         self.model_weight_file = args.model_weight_file
         if self.load_model_weight:
             if self.model_weight_file == '':
-                print 'Please input the model_weight_file if you want to load model weight'
+                print ('Please input the model_weight_file if you want to load model weight')
                 raise ValueError
         # dataset 
         datasets = dict()
@@ -67,9 +67,9 @@ class Config(object):
         datasets['pa100k'] = './dataset/pa100k/pa100k_dataset.pkl'
 
         if args.dataset in datasets:
-            dataset = pickle.load(open(datasets[args.dataset]))
+            dataset = pickle.load(open(datasets[args.dataset], 'rb'))
         else:
-            print '%s does not exist.'%(args.dataset)
+            print ('%s does not exist.'%(args.dataset))
             raise ValueError
         self.att_list = [dataset['att_name'][i] for i in dataset['selected_attribute']]
         
@@ -127,7 +127,7 @@ score = model(img_var).data.cpu().numpy()
 # show the score in command line
 for idx in range(len(cfg.att_list)):
     if score[0, idx] >= 0:
-        print '%s: %.2f'%(cfg.att_list[idx], score[0, idx])
+        print ('%s: %.2f'%(cfg.att_list[idx], score[0, idx]))
 
 # show the score in the image
 img = img.resize(size=(256, 512), resample=Image.BILINEAR)

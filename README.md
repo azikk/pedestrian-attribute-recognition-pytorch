@@ -3,7 +3,8 @@
 ## Preparation
 <font face="Times New Roman" size=4>
 
-**Prerequisite: Python 2.7 and Pytorch 0.3.1**
+**master: Python 2.7 and Pytorch 0.3.1**
+**python3: Python 3.6 and Pytorch 1.0.1**
 
 1. Install [Pytorch](https://pytorch.org/)
 
